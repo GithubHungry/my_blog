@@ -14,3 +14,10 @@ class PostAdmin(admin.ModelAdmin):
     raw_id_fields = ('author',)  # add help-window to search authors
     date_hierarchy = 'publish'  # add links for navigating by 'publish'(date)
     ordering = ('status', 'publish',)
+
+
+@admin.register(models.Comment)
+class CommentAdmin(admin.ModelAdmin):
+    list_display = ('name', 'email', 'post', 'created', 'active',)
+    list_filter = ('active', 'created', 'updated',)  # Filter right\
+    search_fields = ('name', 'email', 'body',)

@@ -3,8 +3,8 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.core.mail import send_mail
 from django.views.generic import ListView
 
-from .models import Post
-from .forms import EmailPostForm
+from .models import Post, Comment
+from .forms import EmailPostForm, CommentForm
 
 
 # Create your views here.
@@ -30,7 +30,18 @@ class PostListView(ListView):
 def post_detail(request, year, month, day, post):
     post = get_object_or_404(Post, status='published', publish__year=year, publish__month=month, publish__day=day,
                              slug=post)
-    return render(request, 'blog/post/detail.html', {'object': post})
+    comments = post.comments.filter(active=True)
+    new_comment = None
+    if request.method == 'POST':
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            new_comment = form.save(commit=False)  # create object, but not save into db
+            new_comment.post = post
+            new_comment.save()
+    else:
+        form = CommentForm()
+    return render(request, 'blog/post/detail.html',
+                  {'object': post, 'form': form, 'comments': comments, 'new_comment': new_comment})
 
 
 def post_share(request, post_id):
