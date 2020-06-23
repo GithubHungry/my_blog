@@ -5,6 +5,9 @@ from django.urls import reverse
 
 
 # Create your models here.
+from taggit.managers import TaggableManager
+
+
 class PublishedManager(models.Manager):
     """New manager for filtering published posts."""
 
@@ -27,6 +30,7 @@ class Post(models.Model):
 
     objects = models.Manager()  # Save objects manager as default
     published = PublishedManager()  # Add custom manager
+    tags = TaggableManager()
 
     class Meta:
         verbose_name = 'Post'
