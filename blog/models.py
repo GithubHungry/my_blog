@@ -25,7 +25,7 @@ class Post(models.Model):
     updated = models.DateTimeField(auto_now=True)
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='draft')
 
-    objects = models.Manager()  # Save objects manager by default
+    objects = models.Manager()  # Save objects manager as default
     published = PublishedManager()  # Add custom manager
 
     class Meta:
